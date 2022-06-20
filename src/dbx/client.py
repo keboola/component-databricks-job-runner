@@ -32,8 +32,7 @@ class DataBricksClient(HttpClient):
                 "idempotency_token": str(uuid.uuid1())
                 }
         try:
-            return self.post(endpoint_path='/api/2.1/jobs/run-now', json=body, verify=self.ssl_verify,
-                             proxies={'https': "socks5://localhost:8900"})
+            return self.post(endpoint_path='/api/2.1/jobs/run-now', json=body, verify=self.ssl_verify)
 
         except HTTPError as http_err:
             raise DataBricksClientClientException(http_err) from http_err
@@ -50,8 +49,7 @@ class DataBricksClient(HttpClient):
         """
         parameters = {"run_id": run_id}
         try:
-            return self.get(endpoint_path='/api/2.1/jobs/runs/get', params=parameters, verify=self.ssl_verify,
-                            proxies={'https': "socks5://localhost:8900"})
+            return self.get(endpoint_path='/api/2.1/jobs/runs/get', params=parameters, verify=self.ssl_verify)
         except HTTPError as http_err:
             raise DataBricksClientClientException(http_err) from http_err
 
@@ -67,8 +65,7 @@ class DataBricksClient(HttpClient):
         """
         parameters = {"job_id": job_id}
         try:
-            return self.get(endpoint_path='/api/2.1/jobs/get', params=parameters, verify=self.ssl_verify,
-                            proxies={'https': "socks5://localhost:8900"})
+            return self.get(endpoint_path='/api/2.1/jobs/get', params=parameters, verify=self.ssl_verify)
         except HTTPError as http_err:
             raise DataBricksClientClientException(f"Failed to retrieve job ID: {job_id}. "
                                                   f"Please check if it's correct", http_err) from http_err
