@@ -31,6 +31,7 @@
       "propertyOrder": 40,
       "title": "SSL verify",
       "type": "boolean",
+      "default": true,
       "description": "If false, SSL verification will be turned off and untrusted certificates may be used.",
       "format": "checkbox"
     }
