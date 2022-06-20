@@ -1,1 +1,38 @@
-{}
+{
+  "title": "Configuration Schema",
+  "type": "object",
+  "required": [
+    "#api_token",
+    "base_url",
+    "job_id"
+  ],
+  "properties": {
+    "#api_token": {
+      "propertyOrder": 10,
+      "title": "Databricks API token",
+      "type": "string",
+      "description": "",
+      "format": "password"
+    },
+    "base_url": {
+      "propertyOrder": 20,
+      "title": "Base url",
+      "type": "string",
+      "default": "https://adb-2153812530704740.0.azuredatabricks.net",
+      "description": "Base URL of the Databricks API instance."
+    },
+    "job_id": {
+      "propertyOrder": 30,
+      "title": "Job id",
+      "type": "string",
+      "description": "ID of the DBX job to trigger."
+    },
+    "ssl_verify": {
+      "propertyOrder": 40,
+      "title": "SSL verify",
+      "type": "boolean",
+      "description": "If false, SSL verification will be turned off and untrusted certificates may be used.",
+      "format": "checkbox"
+    }
+  }
+}

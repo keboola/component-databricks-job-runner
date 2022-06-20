@@ -1,7 +1,7 @@
 Databricks Job Runner
 =============
 
-Description
+Application to trigger Databricks jobs from Keboola Connection flows.
 
 **Table of contents:**
 
@@ -13,34 +13,34 @@ Functionality notes
 Prerequisites
 =============
 
-Get the API token, register application, etc.
+Get the Databricks API token. 
+Get the Databricks JOB ID.
 
-Features
-========
 
-| **Feature**             | **Note**                                      |
-|-------------------------|-----------------------------------------------|
-| Generic UI form         | Dynamic UI form                               |
-| Row Based configuration | Allows structuring the configuration in rows. |
-| oAuth                   | oAuth authentication enabled                  |
-| Incremental loading     | Allows fetching data in new increments.       |
-| Backfill mode           | Support for seamless backfill setup.          |
-| Date range filter       | Specify date range.                           |
-
-Supported endpoints
-===================
-
-If you need more endpoints, please submit your request to
-[ideas.keboola.com](https://ideas.keboola.com/)
 
 Configuration
 =============
 
-Param 1
--------
+## Configuration Schema
+ - Databricks API token (#api_token) - [REQ] 
+ - Base url (base_url) - [REQ] Base URL of the Databricks API instance.
+ - Job id (job_id) - [REQ] ID of the DBX job to trigger.
+ - SSL verify (ssl_verify) - [OPT] If false, SSL verification will be turned off and untrusted certificates may be used.
 
-Param 2
--------
+
+Sample Configuration
+=============
+```json
+{
+  "parameters": {
+    "#api_token": "SECRET_VALUE",
+    "base_url": "https://adb-2153812530704740.0.azuredatabricks.net",
+    "job_id": "750811009736814",
+    "ssl_verify": true,
+    "debug": true
+  }
+}
+```
 
 Output
 ======
@@ -50,8 +50,8 @@ List of tables, foreign keys, schema.
 Development
 -----------
 
-If required, change local data folder (the `CUSTOM_FOLDER` placeholder) path to
-your custom path in the `docker-compose.yml` file:
+If required, change local data folder (the `CUSTOM_FOLDER` placeholder) path to your custom path in
+the `docker-compose.yml` file:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     volumes:
@@ -59,12 +59,9 @@ your custom path in the `docker-compose.yml` file:
       - ./CUSTOM_FOLDER:/data
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Clone this repository, init the workspace and run the component with following
-command:
+Clone this repository, init the workspace and run the component with following command:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-git clone git@bitbucket.org:kds_consulting_team/kds-team.app-databricks-job-runner.git kds-team.app-databricks-job-runner
-cd kds-team.app-databricks-job-runner
 docker-compose build
 docker-compose run --rm dev
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -79,5 +76,4 @@ Integration
 ===========
 
 For information about deployment and integration with KBC, please refer to the
-[deployment section of developers
-documentation](https://developers.keboola.com/extend/component/deployment/)
+[deployment section of developers documentation](https://developers.keboola.com/extend/component/deployment/)
