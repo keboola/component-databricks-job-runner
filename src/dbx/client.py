@@ -10,7 +10,7 @@ class DataBricksClientClientException(Exception):
 
 
 class DataBricksClient(HttpClient):
-    WAIT_TIMEOUT_SECONDS = 300.0
+    WAIT_TIMEOUT_SECONDS = 3600.0
     WAIT_POLL_INTERVAL_SECONDS = 3.0
 
     def __init__(self, base_url: str, token: str, ssl_verify: True):
