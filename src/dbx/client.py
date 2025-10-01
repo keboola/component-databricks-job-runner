@@ -13,12 +13,12 @@ class DataBricksClient(HttpClient):
     WAIT_TIMEOUT_SECONDS = 3600.0
     WAIT_POLL_INTERVAL_SECONDS = 3.0
 
-    def __init__(self, base_url: str, token: str, ssl_verify: True):
+    def __init__(self, base_url: str, token: str, ssl_verify: bool):
         self.token = token
         self.ssl_verify = ssl_verify
         super().__init__(base_url, auth_header={"Authorization": f"Bearer {token}"})
 
-    def run_job_now(self, job_id: int) -> dict:
+    def run_job_now(self, job_id: str) -> dict:
         """
         Run single job.
         Args:
@@ -51,7 +51,7 @@ class DataBricksClient(HttpClient):
         except HTTPError as http_err:
             raise DataBricksClientClientException(http_err) from http_err
 
-    def get_job_detail(self, job_id: int) -> dict:
+    def get_job_detail(self, job_id: str) -> dict:
         """
         Retrieve the metadata of a job.
 
