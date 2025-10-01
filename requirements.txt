@@ -1,4 +1,0 @@
-keboola.component==1.3.7
-keboola.http-client==1.0.0
-mock==4.0.3
-freezegun==1.2.1
