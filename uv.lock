@@ -53,7 +53,6 @@ wheels = [
 
 [[package]]
 name = "component-databricks-job-runner"
-version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "flake8" },
@@ -66,9 +65,9 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "flake8", specifier = ">=7.3.0" },
-    { name = "keboola-component", specifier = "==1.6.13" },
-    { name = "keboola-http-client", specifier = "==1.0.0" },
-    { name = "mock", specifier = "==4.0.3" },
+    { name = "keboola-component", specifier = ">=1.6.13" },
+    { name = "keboola-http-client", specifier = ">=1.0.1" },
+    { name = "mock", specifier = ">=4.0.3" },
     { name = "pydantic", specifier = ">=2.11.9" },
 ]
 
@@ -123,14 +122,14 @@ wheels = [
 
 [[package]]
 name = "keboola-http-client"
-version = "1.0.0"
+version = "1.0.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/2f/ae/dca0318eac7f9f8321ed56ef3a5c1eb82f6ce42281515c649ed9288f43a5/keboola.http_client-1.0.0.tar.gz", hash = "sha256:1e4d0438606446c0900c318852584c0a86d6399b3f28d365e3d40691e7c75991", size = 10138 }
+sdist = { url = "https://files.pythonhosted.org/packages/bd/46/81805cea9f7eff8af310a43e39b312794c9143b89fdcfdc5f502ed1818c6/keboola.http_client-1.0.1.tar.gz", hash = "sha256:58f828c61a709ac484e85e2acb5e78eae2db402e7846769b739a6c336384fa81", size = 10513 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/99/cb/acfbe51a9272cab8bb067281ac96fac3a1f062824a18473c05f72424a038/keboola.http_client-1.0.0-py3-none-any.whl", hash = "sha256:9836daa26039c85ee6807d9b8a688c5ef4a8078dcc3bda7acf76bc79070649f5", size = 8723 },
+    { url = "https://files.pythonhosted.org/packages/27/18/293557d9245a1ec0e0826202ca341bb769033121d1bd1991226db908a5df/keboola.http_client-1.0.1-py3-none-any.whl", hash = "sha256:5d570789433c65325937f6d466cc6b8edc0558f984f03846f0200ae5c5b4b140", size = 8958 },
 ]
 
 [[package]]
@@ -144,11 +143,11 @@ wheels = [
 
 [[package]]
 name = "mock"
-version = "4.0.3"
+version = "5.2.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/e2/be/3ea39a8fd4ed3f9a25aae18a1bff2df7a610bca93c8ede7475e32d8b73a0/mock-4.0.3.tar.gz", hash = "sha256:7d3fbbde18228f4ff2f1f119a45cdffa458b4c0dee32eb4d2bb2f82554bac7bc", size = 72316 }
+sdist = { url = "https://files.pythonhosted.org/packages/07/8c/14c2ae915e5f9dca5a22edd68b35be94400719ccfa068a03e0fb63d0f6f6/mock-5.2.0.tar.gz", hash = "sha256:4e460e818629b4b173f32d08bf30d3af8123afbb8e04bb5707a1fd4799e503f0", size = 92796 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5c/03/b7e605db4a57c0f6fba744b11ef3ddf4ddebcada35022927a2b5fc623fdf/mock-4.0.3-py3-none-any.whl", hash = "sha256:122fcb64ee37cfad5b3f48d7a7d51875d7031aaf3d8be7c42e2bee25044eee62", size = 28536 },
+    { url = "https://files.pythonhosted.org/packages/bd/d9/617e6af809bf3a1d468e0d58c3997b1dc219a9a9202e650d30c2fc85d481/mock-5.2.0-py3-none-any.whl", hash = "sha256:7ba87f72ca0e915175596069dbbcc7c75af7b5e9b9bc107ad6349ede0819982f", size = 31617 },
 ]
 
 [[package]]
@@ -256,14 +255,14 @@ wheels = [
 
 [[package]]
 name = "typing-inspection"
-version = "0.4.1"
+version = "0.4.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f8/b1/0c11f5058406b3af7609f121aaa6b609744687f1d158b3c3a5bf4cc94238/typing_inspection-0.4.1.tar.gz", hash = "sha256:6ae134cc0203c33377d43188d4064e9b357dba58cff3185f22924610e70a9d28", size = 75726 }
+sdist = { url = "https://files.pythonhosted.org/packages/55/e3/70399cb7dd41c10ac53367ae42139cf4b1ca5f36bb3dc6c9d33acdb43655/typing_inspection-0.4.2.tar.gz", hash = "sha256:ba561c48a67c5958007083d386c3295464928b01faa735ab8547c5692e87f464", size = 75949 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/17/69/cd203477f944c353c31bade965f880aa1061fd6bf05ded0726ca845b6ff7/typing_inspection-0.4.1-py3-none-any.whl", hash = "sha256:389055682238f53b04f7badcb49b989835495a96700ced5dab2d8feae4b26f51", size = 14552 },
+    { url = "https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl", hash = "sha256:4ed1cacbdc298c220f1bd249ed5287caa16f34d44ef4e9c3d0cbad5b521545e7", size = 14611 },
 ]
 
 [[package]]

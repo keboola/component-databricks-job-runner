@@ -29,7 +29,7 @@ class Component(ComponentBase):
     @sync_action("list_jobs")
     def list_databases(self):
         jobs = self.dbx_client.get_jobs()
-        return [SelectElement(value=j.get("job_id"), label=j.get("settings", {}).get("name")) for j in jobs]
+        return [SelectElement(value=j.get("job_id"), label=(j.get("settings") or {}).get("name")) for j in jobs]
 
 
 """
