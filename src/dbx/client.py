@@ -102,3 +102,22 @@ class DataBricksClient(HttpClient):
                 run_meta,
             )
         return run_meta
+
+    def get_jobs(self) -> list:
+        """
+        Get list of all jobs.
+        """
+        jobs = []
+        has_more = True
+        offset = 0
+        page_size = 25
+        while has_more:
+            parameters = {"limit": page_size, "offset": offset}
+            try:
+                response = self.get(endpoint_path="/api/2.1/jobs/list", params=parameters, verify=self.ssl_verify)
+                jobs.extend(response.get("jobs", []))
+                has_more = response.get("has_more", False)
+                offset += page_size
+            except HTTPError as http_err:
+                raise DataBricksClientClientException(http_err) from http_err
+        return jobs

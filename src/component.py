@@ -1,7 +1,8 @@
 import logging
 
-from keboola.component.base import ComponentBase
+from keboola.component.base import ComponentBase, sync_action
 from keboola.component.exceptions import UserException
+from keboola.component.sync_actions import SelectElement
 
 from configuration import Configuration
 from dbx.client import DataBricksClient
@@ -24,6 +25,11 @@ class Component(ComponentBase):
         self.dbx_client.wait_for_job(resp["run_id"])
 
         logging.info("Job finished successfully!")
+
+    @sync_action("list_jobs")
+    def list_databases(self):
+        jobs = self.dbx_client.get_jobs()
+        return [SelectElement(value=j.get("job_id"), label=j.get("settings", {}).get("name")) for j in jobs]
 
 
 """

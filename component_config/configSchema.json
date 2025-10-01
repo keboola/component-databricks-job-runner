@@ -25,7 +25,15 @@
       "propertyOrder": 30,
       "title": "Job id",
       "type": "string",
-      "description": "ID of the DBX job to trigger."
+      "description": "ID of the DBX job to trigger.",
+      "format": "select",
+      "enum": [],
+      "options": {
+        "async": {
+          "label": "Load jobs",
+          "action": "list_jobs"
+        }
+      }
     },
     "ssl_verify": {
       "propertyOrder": 40,
