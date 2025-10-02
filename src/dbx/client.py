@@ -13,12 +13,12 @@ class DataBricksClient(HttpClient):
     WAIT_TIMEOUT_SECONDS = 3600.0
     WAIT_POLL_INTERVAL_SECONDS = 3.0
 
-    def __init__(self, base_url: str, token: str, ssl_verify: True):
+    def __init__(self, base_url: str, token: str, ssl_verify: bool):
         self.token = token
         self.ssl_verify = ssl_verify
         super().__init__(base_url, auth_header={"Authorization": f"Bearer {token}"})
 
-    def run_job_now(self, job_id: int) -> dict:
+    def run_job_now(self, job_id: str) -> dict:
         """
         Run single job.
         Args:
@@ -28,11 +28,9 @@ class DataBricksClient(HttpClient):
 
         """
 
-        body = {"job_id": job_id,
-                "idempotency_token": str(uuid.uuid1())
-                }
+        body = {"job_id": job_id, "idempotency_token": str(uuid.uuid1())}
         try:
-            return self.post(endpoint_path='/api/2.1/jobs/run-now', json=body, verify=self.ssl_verify)
+            return self.post(endpoint_path="/api/2.1/jobs/run-now", json=body, verify=self.ssl_verify)
 
         except HTTPError as http_err:
             raise DataBricksClientClientException(http_err) from http_err
@@ -49,11 +47,11 @@ class DataBricksClient(HttpClient):
         """
         parameters = {"run_id": run_id}
         try:
-            return self.get(endpoint_path='/api/2.1/jobs/runs/get', params=parameters, verify=self.ssl_verify)
+            return self.get(endpoint_path="/api/2.1/jobs/runs/get", params=parameters, verify=self.ssl_verify)
         except HTTPError as http_err:
             raise DataBricksClientClientException(http_err) from http_err
 
-    def get_job_detail(self, job_id: int) -> dict:
+    def get_job_detail(self, job_id: str) -> dict:
         """
         Retrieve the metadata of a job.
 
@@ -65,14 +63,13 @@ class DataBricksClient(HttpClient):
         """
         parameters = {"job_id": job_id}
         try:
-            return self.get(endpoint_path='/api/2.1/jobs/get', params=parameters, verify=self.ssl_verify)
+            return self.get(endpoint_path="/api/2.1/jobs/get", params=parameters, verify=self.ssl_verify)
         except HTTPError as http_err:
-            raise DataBricksClientClientException(f"Failed to retrieve job ID: {job_id}. "
-                                                  f"Please check if it's correct", http_err) from http_err
+            raise DataBricksClientClientException(
+                f"Failed to retrieve job ID: {job_id}. Please check if it's correct", http_err
+            ) from http_err
 
-    def wait_for_job(self, run_id: int,
-                     timeout_seconds: float = None,
-                     poll_interval_seconds: float = None) -> dict:
+    def wait_for_job(self, run_id: int, timeout_seconds: float = None, poll_interval_seconds: float = None) -> dict:
         """
         Wait for the DBX job to finish. Raises exception when state is not SUCCESS
         Args:
@@ -87,18 +84,40 @@ class DataBricksClient(HttpClient):
         timeout_seconds = timeout_seconds or self.WAIT_TIMEOUT_SECONDS
         poll_interval_seconds = poll_interval_seconds or self.WAIT_POLL_INTERVAL_SECONDS
         expires_at = time.time() + timeout_seconds
-        exit_states = ['TERMINATED', 'SKIPPED', 'INTERNAL_ERROR']
+        exit_states = ["TERMINATED", "SKIPPED", "INTERNAL_ERROR"]
         while True:
             run_meta = self.get_job_run(run_id)
-            run_state = run_meta['state']['life_cycle_state']
+            run_state = run_meta["state"]["life_cycle_state"]
             if run_state in exit_states:
                 break
             if time.time() > expires_at:
-                raise DataBricksClientClientException(f'Timeout of {timeout_seconds} seconds reached for run {run_id}.')
+                raise DataBricksClientClientException(f"Timeout of {timeout_seconds} seconds reached for run {run_id}.")
             time.sleep(poll_interval_seconds)
 
-        if run_meta['state']['result_state'] != 'SUCCESS':
-            raise DataBricksClientClientException(f"Job execution failed with status: "
-                                                  f"{run_meta['state']['result_state']}, "
-                                                  f"Reason: {run_meta['state']['state_message']}", run_meta)
+        if run_meta["state"]["result_state"] != "SUCCESS":
+            raise DataBricksClientClientException(
+                f"Job execution failed with status: "
+                f"{run_meta['state']['result_state']}, "
+                f"Reason: {run_meta['state']['state_message']}",
+                run_meta,
+            )
         return run_meta
+
+    def get_jobs(self) -> list:
+        """
+        Get list of all jobs.
+        """
+        jobs = []
+        has_more = True
+        offset = 0
+        page_size = 25
+        while has_more:
+            parameters = {"limit": page_size, "offset": offset}
+            try:
+                response = self.get(endpoint_path="/api/2.1/jobs/list", params=parameters, verify=self.ssl_verify)
+                jobs.extend(response.get("jobs", []))
+                has_more = response.get("has_more", False)
+                offset += page_size
+            except HTTPError as http_err:
+                raise DataBricksClientClientException(http_err) from http_err
+        return jobs
