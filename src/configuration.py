@@ -1,11 +1,19 @@
+from typing import Annotated
+
 from keboola.component.exceptions import UserException
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, BeforeValidator, Field, ValidationError
+
+
+def _coerce_to_str(v: object) -> object:
+    if isinstance(v, int):
+        return str(v)
+    return v
 
 
 class Configuration(BaseModel):
     api_token: str = Field(alias="#api_token")
     base_url: str
-    job_id: str = ""
+    job_id: Annotated[str, BeforeValidator(_coerce_to_str)] = ""
     ssl_verify: bool = True
     debug: bool = False
 
