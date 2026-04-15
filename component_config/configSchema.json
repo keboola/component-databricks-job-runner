@@ -24,7 +24,7 @@
     "job_id": {
       "propertyOrder": 30,
       "title": "Job id",
-      "type": "string",
+      "type": "integer",
       "description": "ID of the DBX job to trigger.",
       "format": "select",
       "enum": [],
