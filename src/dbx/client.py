@@ -18,7 +18,7 @@ class DataBricksClient(HttpClient):
         self.ssl_verify = ssl_verify
         super().__init__(base_url, auth_header={"Authorization": f"Bearer {token}"})
 
-    def run_job_now(self, job_id: str) -> dict:
+    def run_job_now(self, job_id: int) -> dict:
         """
         Run single job.
         Args:
@@ -51,7 +51,7 @@ class DataBricksClient(HttpClient):
         except HTTPError as http_err:
             raise DataBricksClientClientException(http_err) from http_err
 
-    def get_job_detail(self, job_id: str) -> dict:
+    def get_job_detail(self, job_id: int) -> dict:
         """
         Retrieve the metadata of a job.
 

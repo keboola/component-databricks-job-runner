@@ -16,16 +16,16 @@
     },
     "base_url": {
       "propertyOrder": 20,
-      "title": "Base url",
+      "title": "Base URL",
       "type": "string",
       "default": "https://adb-2153812530704740.0.azuredatabricks.net",
       "description": "Base URL of the Databricks API instance."
     },
     "job_id": {
       "propertyOrder": 30,
-      "title": "Job id",
-      "type": "string",
-      "description": "ID of the DBX job to trigger.",
+      "title": "Job ID",
+      "type": "integer",
+      "description": "ID of the Databricks job to trigger.",
       "format": "select",
       "enum": [],
       "options": {
