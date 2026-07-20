@@ -13,7 +13,18 @@ Functionality notes
 Prerequisites
 =============
 
-Get the Databricks API token. 
+The component supports two authentication methods against Databricks:
+
+**1. Personal Access Token (PAT)**
+ - Generate a Databricks Personal Access Token.
+
+**2. Service Principal (OAuth M2M)**
+ - Create a Databricks service principal and generate an OAuth secret for it.
+ - Grant the service principal access to the jobs you want to trigger.
+ - The component exchanges the client ID and secret for a short-lived workspace
+   access token using the OAuth machine-to-machine (client credentials) grant,
+   and transparently refreshes it before expiry.
+
 Get the Databricks JOB ID.
 
 
@@ -22,18 +33,38 @@ Configuration
 =============
 
 ## Configuration Schema
- - Databricks API token (#api_token) - [REQ] 
+ - Authentication method (auth_type) - [OPT] `token` (Personal Access Token, default) or `service_principal` (OAuth M2M).
+ - Databricks API token (#api_token) - [REQ for `token`] Personal Access Token.
+ - Client ID (client_id) - [REQ for `service_principal`] Service principal application (client) ID.
+ - Client secret (#client_secret) - [REQ for `service_principal`] Service principal OAuth secret.
  - Base url (base_url) - [REQ] Base URL of the Databricks API instance.
  - Job id (job_id) - [REQ] ID of the DBX job to trigger.
  - SSL verify (ssl_verify) - [OPT] If false, SSL verification will be turned off and untrusted certificates may be used.
 
 
-Sample Configuration
+Sample Configuration (Personal Access Token)
 =============
 ```json
 {
   "parameters": {
+    "auth_type": "token",
     "#api_token": "SECRET_VALUE",
+    "base_url": "https://adb-2153812530704740.0.azuredatabricks.net",
+    "job_id": "750811009736814",
+    "ssl_verify": true,
+    "debug": true
+  }
+}
+```
+
+Sample Configuration (Service Principal / OAuth M2M)
+=============
+```json
+{
+  "parameters": {
+    "auth_type": "service_principal",
+    "client_id": "00000000-0000-0000-0000-000000000000",
+    "#client_secret": "SECRET_VALUE",
     "base_url": "https://adb-2153812530704740.0.azuredatabricks.net",
     "job_id": "750811009736814",
     "ssl_verify": true,

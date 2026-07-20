@@ -4,7 +4,7 @@ from keboola.component.base import ComponentBase, sync_action
 from keboola.component.exceptions import UserException
 from keboola.component.sync_actions import SelectElement
 
-from configuration import Configuration
+from configuration import AuthType, Configuration
 from dbx.client import DataBricksClient
 
 
@@ -13,7 +13,19 @@ class Component(ComponentBase):
         super().__init__()
         self.params = Configuration(**self.configuration.parameters)
 
-        self.dbx_client = DataBricksClient(self.params.base_url, self.params.api_token, self.params.ssl_verify)
+        if self.params.auth_type == AuthType.SERVICE_PRINCIPAL:
+            self.dbx_client = DataBricksClient(
+                self.params.base_url,
+                self.params.ssl_verify,
+                client_id=self.params.client_id,
+                client_secret=self.params.client_secret,
+            )
+        else:
+            self.dbx_client = DataBricksClient(
+                self.params.base_url,
+                self.params.ssl_verify,
+                token=self.params.api_token,
+            )
 
     def run(self):
         logging.info("Validating Job ID.")
