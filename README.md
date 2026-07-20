@@ -40,6 +40,7 @@ Configuration
  - Base url (base_url) - [REQ] Base URL of the Databricks API instance.
  - Job id (job_id) - [REQ] ID of the DBX job to trigger. Pick it from the list via the "Load jobs" action, or type it manually if the credentials can't list jobs. The "Load jobs" action fails with an explanatory error when no jobs are returned (usually a permissions issue), but you can always enter the ID by hand.
  - Job parameters (job_parameters) - [OPT] Key-value parameters passed to the job run (forwarded as run-now `job_parameters`). Values support Keboola `{{variables}}` and override the job's default parameter values.
+ - Wait for job to finish (wait_for_finish) - [OPT] Default `true`. If enabled, the component waits for the triggered job to finish and fails when it does not end with `SUCCESS`. If disabled, it triggers the job and finishes immediately without checking the result.
  - SSL verify (ssl_verify) - [OPT] If false, SSL verification will be turned off and untrusted certificates may be used.
 
 

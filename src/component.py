@@ -42,9 +42,17 @@ class Component(ComponentBase):
         if job_parameters:
             logging.info(f"Passing {len(job_parameters)} job parameter(s): {sorted(job_parameters)}")
         resp = self.dbx_client.run_job_now(self.params.job_id, job_parameters=job_parameters)
-        self.dbx_client.wait_for_job(resp["run_id"])
+        run_id = resp["run_id"]
 
-        logging.info("Job finished successfully!")
+        if self.params.wait_for_finish:
+            logging.info(f"Waiting for run {run_id} to finish...")
+            self.dbx_client.wait_for_job(run_id)
+            logging.info("Job finished successfully!")
+        else:
+            logging.info(
+                f"Job triggered (run ID: {run_id}). Not waiting for completion "
+                "(wait_for_finish is disabled); the component will not reflect the job's final status."
+            )
 
     @sync_action("list_jobs")
     def list_jobs(self):

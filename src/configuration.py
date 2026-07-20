@@ -26,6 +26,7 @@ class Configuration(BaseModel):
     base_url: str
     job_id: int = 0
     job_parameters: list[JobParameter] = Field(default_factory=list)
+    wait_for_finish: bool = True
     ssl_verify: bool = True
     debug: bool = False
 

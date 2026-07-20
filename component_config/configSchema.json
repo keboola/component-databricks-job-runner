@@ -105,6 +105,14 @@
         }
       }
     },
+    "wait_for_finish": {
+      "propertyOrder": 36,
+      "title": "Wait for job to finish",
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, the component waits until the triggered job finishes and fails when the job does not end with SUCCESS. If disabled, the component triggers the job and finishes immediately without checking the result.",
+      "format": "checkbox"
+    },
     "ssl_verify": {
       "propertyOrder": 40,
       "title": "SSL verify",

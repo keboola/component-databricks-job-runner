@@ -33,6 +33,14 @@ class TestConfiguration(unittest.TestCase):
         self.assertEqual(cfg.client_id, "client-id")
         self.assertEqual(cfg.client_secret, "client-secret")
 
+    def test_wait_for_finish_defaults_true(self):
+        cfg = Configuration(**{"#api_token": "secret", "base_url": "https://dbx"})
+        self.assertTrue(cfg.wait_for_finish)
+
+    def test_wait_for_finish_can_be_disabled(self):
+        cfg = Configuration(**{"#api_token": "secret", "base_url": "https://dbx", "wait_for_finish": False})
+        self.assertFalse(cfg.wait_for_finish)
+
     def test_job_id_empty_string_coerced_to_zero(self):
         cfg = Configuration(**{"#api_token": "secret", "base_url": "https://dbx", "job_id": ""})
         self.assertEqual(cfg.job_id, 0)
