@@ -28,6 +28,11 @@ class Component(ComponentBase):
             )
 
     def run(self):
+        if not self.params.job_id:
+            raise UserException(
+                "Job ID is not set. Enter a Databricks Job ID - use the 'Load jobs' action to pick one, "
+                "or type it manually if you don't have permission to list jobs."
+            )
         logging.info("Validating Job ID.")
         job_details = self.dbx_client.get_job_detail(self.params.job_id)
         logging.info(
@@ -42,9 +47,17 @@ class Component(ComponentBase):
         logging.info("Job finished successfully!")
 
     @sync_action("list_jobs")
-    def list_databases(self):
+    def list_jobs(self):
         jobs = self.dbx_client.get_jobs()
-        return [SelectElement(value=j.get("job_id"), label=(j.get("settings") or {}).get("name")) for j in jobs]
+        if not jobs:
+            raise UserException(
+                "No jobs were returned. The configured credentials likely lack permission to list jobs "
+                "(a service principal needs at least CAN_VIEW on the jobs). "
+                "You can still enter the Job ID manually."
+            )
+        return [
+            SelectElement(value=str(j.get("job_id")), label=(j.get("settings") or {}).get("name")) for j in jobs
+        ]
 
 
 """

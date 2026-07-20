@@ -68,15 +68,16 @@
     "job_id": {
       "propertyOrder": 30,
       "title": "Job ID",
-      "type": "integer",
-      "description": "ID of the Databricks job to trigger.",
+      "type": "string",
+      "description": "ID of the Databricks job to trigger. Pick it from the list, or type the ID manually if you don't have permission to list jobs.",
       "format": "select",
       "enum": [],
       "options": {
         "async": {
           "label": "Load jobs",
           "action": "list_jobs"
-        }
+        },
+        "creatable": true
       }
     },
     "job_parameters": {

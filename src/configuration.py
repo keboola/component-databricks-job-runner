@@ -30,8 +30,8 @@ class Configuration(BaseModel):
     debug: bool = False
 
     def __init__(self, **data):
-        if "job_id" in data and isinstance(data["job_id"], str) and data["job_id"]:
-            data["job_id"] = int(data["job_id"])
+        if "job_id" in data and isinstance(data["job_id"], str):
+            data["job_id"] = int(data["job_id"]) if data["job_id"].strip() else 0
         try:
             super().__init__(**data)
         except ValidationError as e:
