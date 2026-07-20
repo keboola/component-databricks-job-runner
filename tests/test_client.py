@@ -51,6 +51,21 @@ class TestDataBricksClientOAuth(unittest.TestCase):
         self.assertEqual(client._auth_header["Authorization"], "Bearer token-2")
         self.assertEqual(mock_post.call_count, 2)
 
+    def test_run_job_now_forwards_job_parameters(self):
+        client = DataBricksClient("https://dbx", ssl_verify=True, token="pat-token")
+        with mock.patch.object(client, "post", return_value={"run_id": 1}) as mock_http_post:
+            client.run_job_now(42, job_parameters={"environment": "production"})
+        _, kwargs = mock_http_post.call_args
+        self.assertEqual(kwargs["json"]["job_id"], 42)
+        self.assertEqual(kwargs["json"]["job_parameters"], {"environment": "production"})
+
+    def test_run_job_now_omits_empty_job_parameters(self):
+        client = DataBricksClient("https://dbx", ssl_verify=True, token="pat-token")
+        with mock.patch.object(client, "post", return_value={"run_id": 1}) as mock_http_post:
+            client.run_job_now(42, job_parameters={})
+        _, kwargs = mock_http_post.call_args
+        self.assertNotIn("job_parameters", kwargs["json"])
+
     @mock.patch("dbx.client.requests.post")
     def test_missing_access_token_raises(self, mock_post):
         resp = mock.Mock()

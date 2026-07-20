@@ -33,6 +33,28 @@ class TestConfiguration(unittest.TestCase):
         self.assertEqual(cfg.client_id, "client-id")
         self.assertEqual(cfg.client_secret, "client-secret")
 
+    def test_job_parameters_default_empty(self):
+        cfg = Configuration(**{"#api_token": "secret", "base_url": "https://dbx"})
+        self.assertEqual(cfg.job_parameters, [])
+        self.assertEqual(cfg.job_parameters_dict(), {})
+
+    def test_job_parameters_parsed_to_dict(self):
+        cfg = Configuration(
+            **{
+                "#api_token": "secret",
+                "base_url": "https://dbx",
+                "job_parameters": [
+                    {"key": "environment", "value": "production"},
+                    {"key": "run_date", "value": "2026-07-20"},
+                    {"key": "", "value": "ignored"},
+                ],
+            }
+        )
+        self.assertEqual(
+            cfg.job_parameters_dict(),
+            {"environment": "production", "run_date": "2026-07-20"},
+        )
+
     def test_service_principal_missing_credentials_fails(self):
         with self.assertRaises(UserException):
             Configuration(**{"auth_type": "service_principal", "client_id": "client-id", "base_url": "https://dbx"})

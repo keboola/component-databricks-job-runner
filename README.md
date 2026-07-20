@@ -39,6 +39,7 @@ Configuration
  - Client secret (#client_secret) - [REQ for `service_principal`] Service principal OAuth secret.
  - Base url (base_url) - [REQ] Base URL of the Databricks API instance.
  - Job id (job_id) - [REQ] ID of the DBX job to trigger.
+ - Job parameters (job_parameters) - [OPT] Key-value parameters passed to the job run (forwarded as run-now `job_parameters`). Values support Keboola `{{variables}}` and override the job's default parameter values.
  - SSL verify (ssl_verify) - [OPT] If false, SSL verification will be turned off and untrusted certificates may be used.
 
 
@@ -51,6 +52,10 @@ Sample Configuration (Personal Access Token)
     "#api_token": "SECRET_VALUE",
     "base_url": "https://adb-2153812530704740.0.azuredatabricks.net",
     "job_id": "750811009736814",
+    "job_parameters": [
+      {"key": "environment", "value": "production"},
+      {"key": "run_date", "value": "{{run_date}}"}
+    ],
     "ssl_verify": true,
     "debug": true
   }

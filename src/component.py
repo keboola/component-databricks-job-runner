@@ -33,7 +33,10 @@ class Component(ComponentBase):
         logging.info(
             f"Job named '{job_details['settings']['name']}' found. Trying to run the dbx job ID: {self.params.job_id}"
         )
-        resp = self.dbx_client.run_job_now(self.params.job_id)
+        job_parameters = self.params.job_parameters_dict()
+        if job_parameters:
+            logging.info(f"Passing {len(job_parameters)} job parameter(s): {sorted(job_parameters)}")
+        resp = self.dbx_client.run_job_now(self.params.job_id, job_parameters=job_parameters)
         self.dbx_client.wait_for_job(resp["run_id"])
 
         logging.info("Job finished successfully!")

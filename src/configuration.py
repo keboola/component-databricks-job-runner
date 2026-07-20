@@ -11,6 +11,13 @@ class AuthType(str, Enum):
     SERVICE_PRINCIPAL = "service_principal"
 
 
+class JobParameter(BaseModel):
+    """A single key-value parameter forwarded to the Databricks job run."""
+
+    key: str
+    value: str = ""
+
+
 class Configuration(BaseModel):
     auth_type: AuthType = AuthType.TOKEN
     api_token: str = Field(default="", alias="#api_token")
@@ -18,6 +25,7 @@ class Configuration(BaseModel):
     client_secret: str = Field(default="", alias="#client_secret")
     base_url: str
     job_id: int = 0
+    job_parameters: list[JobParameter] = Field(default_factory=list)
     ssl_verify: bool = True
     debug: bool = False
 
@@ -48,3 +56,7 @@ class Configuration(BaseModel):
                 raise UserException(
                     f"Service principal (OAuth M2M) authentication requires: {', '.join(missing)}."
                 )
+
+    def job_parameters_dict(self) -> dict:
+        """Return the configured job parameters as a {key: value} mapping (empty keys ignored)."""
+        return {param.key: param.value for param in self.job_parameters if param.key}

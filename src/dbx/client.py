@@ -83,11 +83,12 @@ class DataBricksClient(HttpClient):
             self.token = token
             self.update_auth_header({"Authorization": f"Bearer {token}"}, overwrite=True)
 
-    def run_job_now(self, job_id: int) -> dict:
+    def run_job_now(self, job_id: int, job_parameters: dict = None) -> dict:
         """
         Run single job.
         Args:
             job_id:
+            job_parameters: Optional key-value parameters forwarded to the job run as `job_parameters`.
 
         Returns:
 
@@ -95,6 +96,8 @@ class DataBricksClient(HttpClient):
 
         self._ensure_token()
         body = {"job_id": job_id, "idempotency_token": str(uuid.uuid1())}
+        if job_parameters:
+            body["job_parameters"] = job_parameters
         try:
             return self.post(endpoint_path="/api/2.1/jobs/run-now", json=body, verify=self.ssl_verify)
 

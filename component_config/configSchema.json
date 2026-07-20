@@ -79,6 +79,31 @@
         }
       }
     },
+    "job_parameters": {
+      "propertyOrder": 35,
+      "type": "array",
+      "title": "Job parameters",
+      "description": "Optional key-value parameters passed to the Databricks job run (forwarded as run-now `job_parameters`). Values support Keboola {{variables}} and override the job's default parameter values.",
+      "items": {
+        "type": "object",
+        "title": "Parameter",
+        "required": [
+          "key"
+        ],
+        "properties": {
+          "key": {
+            "propertyOrder": 1,
+            "type": "string",
+            "title": "Key"
+          },
+          "value": {
+            "propertyOrder": 2,
+            "type": "string",
+            "title": "Value"
+          }
+        }
+      }
+    },
     "ssl_verify": {
       "propertyOrder": 40,
       "title": "SSL verify",
