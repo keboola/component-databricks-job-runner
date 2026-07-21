@@ -49,6 +49,10 @@ class TestConfiguration(unittest.TestCase):
         cfg = Configuration(**{"#api_token": "secret", "base_url": "https://dbx", "job_id": "12345"})
         self.assertEqual(cfg.job_id, 12345)
 
+    def test_job_id_non_numeric_raises_user_exception(self):
+        with self.assertRaises(UserException):
+            Configuration(**{"#api_token": "secret", "base_url": "https://dbx", "job_id": "not-a-number"})
+
     def test_job_parameters_default_empty(self):
         cfg = Configuration(**{"#api_token": "secret", "base_url": "https://dbx"})
         self.assertEqual(cfg.job_parameters, [])

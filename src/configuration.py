@@ -32,7 +32,16 @@ class Configuration(BaseModel):
 
     def __init__(self, **data):
         if "job_id" in data and isinstance(data["job_id"], str):
-            data["job_id"] = int(data["job_id"]) if data["job_id"].strip() else 0
+            raw_job_id = data["job_id"].strip()
+            if raw_job_id:
+                try:
+                    data["job_id"] = int(raw_job_id)
+                except ValueError:
+                    raise UserException(
+                        f"Invalid Job ID '{data['job_id']}'. The Job ID must be a numeric Databricks job identifier."
+                    )
+            else:
+                data["job_id"] = 0
         try:
             super().__init__(**data)
         except ValidationError as e:

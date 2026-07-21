@@ -5,6 +5,9 @@ from unittest import mock
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
+from keboola.component.exceptions import UserException  # noqa: E402
+from requests.exceptions import HTTPError  # noqa: E402
+
 from dbx.client import DataBricksClient, DataBricksClientClientException  # noqa: E402
 
 
@@ -29,7 +32,16 @@ class TestDataBricksClientOAuth(unittest.TestCase):
         self.assertEqual(args[0], "https://dbx/oidc/v1/token")
         self.assertEqual(kwargs["auth"], ("cid", "csecret"))
         self.assertEqual(kwargs["data"]["grant_type"], "client_credentials")
+        self.assertEqual(kwargs["timeout"], (10, 30))
         self.assertEqual(client._auth_header["Authorization"], "Bearer oauth-token")
+
+    @mock.patch("dbx.client.requests.post")
+    def test_oauth_http_error_raises_user_exception(self, mock_post):
+        resp = mock.Mock()
+        resp.raise_for_status.side_effect = HTTPError("401 Unauthorized")
+        mock_post.return_value = resp
+        with self.assertRaises(UserException):
+            DataBricksClient("https://dbx", ssl_verify=True, client_id="cid", client_secret="wrong-secret")
 
     @mock.patch("dbx.client.requests.post")
     def test_token_auth_does_not_call_oauth(self, mock_post):

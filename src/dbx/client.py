@@ -2,6 +2,7 @@ import time
 import uuid
 
 import requests
+from keboola.component.exceptions import UserException
 from keboola.http_client import HttpClient
 from requests.exceptions import HTTPError, RequestException
 
@@ -17,6 +18,8 @@ class DataBricksClient(HttpClient):
     OAUTH_TOKEN_PATH = "/oidc/v1/token"
     OAUTH_SCOPE = "all-apis"
     OAUTH_REFRESH_MARGIN_SECONDS = 60.0
+    # (connect, read) timeout for the OAuth token request.
+    OAUTH_REQUEST_TIMEOUT = (10, 30)
 
     def __init__(
         self,
@@ -51,13 +54,14 @@ class DataBricksClient(HttpClient):
                 auth=(self._client_id, self._client_secret),
                 data={"grant_type": "client_credentials", "scope": self.OAUTH_SCOPE},
                 verify=self.ssl_verify,
+                timeout=self.OAUTH_REQUEST_TIMEOUT,
             )
             response.raise_for_status()
         except HTTPError as http_err:
-            raise DataBricksClientClientException(
+            # A user-fixable credential/setup mistake - surface it as a UserException (exit 1).
+            raise UserException(
                 "Failed to obtain an OAuth token for the service principal. Please verify the client ID, "
-                "client secret and that OAuth (M2M) is enabled for the workspace.",
-                http_err,
+                "client secret and that OAuth (M2M) is enabled for the workspace."
             ) from http_err
         except RequestException as err:
             raise DataBricksClientClientException(
