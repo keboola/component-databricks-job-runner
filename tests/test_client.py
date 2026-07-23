@@ -78,6 +78,18 @@ class TestDataBricksClientOAuth(unittest.TestCase):
         _, kwargs = mock_http_post.call_args
         self.assertNotIn("job_parameters", kwargs["json"])
 
+    def test_run_job_now_http_error_raises_user_exception(self):
+        client = DataBricksClient("https://dbx", ssl_verify=True, token="pat-token")
+        with mock.patch.object(client, "post", side_effect=HTTPError("404 Not Found")):
+            with self.assertRaises(UserException):
+                client.run_job_now(999)
+
+    def test_get_job_detail_http_error_raises_user_exception(self):
+        client = DataBricksClient("https://dbx", ssl_verify=True, token="pat-token")
+        with mock.patch.object(client, "get", side_effect=HTTPError("404 Not Found")):
+            with self.assertRaises(UserException):
+                client.get_job_detail(999)
+
     @mock.patch("dbx.client.requests.post")
     def test_missing_access_token_raises(self, mock_post):
         resp = mock.Mock()

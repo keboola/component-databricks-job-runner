@@ -25,9 +25,9 @@ class DataBricksClient(HttpClient):
         self,
         base_url: str,
         ssl_verify: bool,
-        token: str = None,
-        client_id: str = None,
-        client_secret: str = None,
+        token: str | None = None,
+        client_id: str | None = None,
+        client_secret: str | None = None,
     ):
         self.base_url = base_url
         self.ssl_verify = ssl_verify
@@ -87,7 +87,7 @@ class DataBricksClient(HttpClient):
             self.token = token
             self.update_auth_header({"Authorization": f"Bearer {token}"}, overwrite=True)
 
-    def run_job_now(self, job_id: int, job_parameters: dict = None) -> dict:
+    def run_job_now(self, job_id: int, job_parameters: dict | None = None) -> dict:
         """
         Run single job.
         Args:
@@ -106,7 +106,11 @@ class DataBricksClient(HttpClient):
             return self.post(endpoint_path="/api/2.1/jobs/run-now", json=body, verify=self.ssl_verify)
 
         except HTTPError as http_err:
-            raise DataBricksClientClientException(http_err) from http_err
+            # A wrong or unauthorized job ID is a user-fixable mistake - surface it as exit 1.
+            raise UserException(
+                f"Failed to trigger job ID {job_id}. Please check that the ID is correct "
+                "and that the credentials are allowed to run it."
+            ) from http_err
 
     def get_job_run(self, run_id: int) -> dict:
         """
@@ -140,11 +144,15 @@ class DataBricksClient(HttpClient):
         try:
             return self.get(endpoint_path="/api/2.1/jobs/get", params=parameters, verify=self.ssl_verify)
         except HTTPError as http_err:
-            raise DataBricksClientClientException(
-                f"Failed to retrieve job ID: {job_id}. Please check if it's correct", http_err
+            # A wrong or unauthorized job ID is a user-fixable mistake - surface it as exit 1.
+            raise UserException(
+                f"Failed to retrieve job ID {job_id}. Please check that the ID is correct "
+                "and that the credentials have access to it."
             ) from http_err
 
-    def wait_for_job(self, run_id: int, timeout_seconds: float = None, poll_interval_seconds: float = None) -> dict:
+    def wait_for_job(
+        self, run_id: int, timeout_seconds: float | None = None, poll_interval_seconds: float | None = None
+    ) -> dict:
         """
         Wait for the DBX job to finish. Raises exception when state is not SUCCESS
         Args:
