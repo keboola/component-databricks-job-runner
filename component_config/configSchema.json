@@ -2,17 +2,61 @@
   "title": "Configuration Schema",
   "type": "object",
   "required": [
-    "#api_token",
     "base_url",
     "job_id"
   ],
   "properties": {
+    "auth_type": {
+      "propertyOrder": 5,
+      "title": "Authentication method",
+      "type": "string",
+      "enum": [
+        "token",
+        "service_principal"
+      ],
+      "options": {
+        "enum_titles": [
+          "Personal Access Token",
+          "Service Principal (OAuth M2M)"
+        ]
+      },
+      "default": "token",
+      "description": "How the component authenticates against Databricks."
+    },
     "#api_token": {
       "propertyOrder": 10,
       "title": "Databricks API token",
       "type": "string",
-      "description": "",
-      "format": "password"
+      "description": "Personal Access Token used to authenticate against the Databricks API.",
+      "format": "password",
+      "options": {
+        "dependencies": {
+          "auth_type": "token"
+        }
+      }
+    },
+    "client_id": {
+      "propertyOrder": 12,
+      "title": "Client ID",
+      "type": "string",
+      "description": "Application (client) ID of the Databricks service principal.",
+      "options": {
+        "dependencies": {
+          "auth_type": "service_principal"
+        }
+      }
+    },
+    "#client_secret": {
+      "propertyOrder": 14,
+      "title": "Client secret",
+      "type": "string",
+      "format": "password",
+      "description": "OAuth secret generated for the Databricks service principal.",
+      "options": {
+        "dependencies": {
+          "auth_type": "service_principal"
+        }
+      }
     },
     "base_url": {
       "propertyOrder": 20,
@@ -24,16 +68,50 @@
     "job_id": {
       "propertyOrder": 30,
       "title": "Job ID",
-      "type": "integer",
-      "description": "ID of the Databricks job to trigger.",
+      "type": "string",
+      "description": "ID of the Databricks job to trigger. Pick it from the list, or type the ID manually if you don't have permission to list jobs.",
       "format": "select",
       "enum": [],
       "options": {
         "async": {
           "label": "Load jobs",
           "action": "list_jobs"
+        },
+        "creatable": true
+      }
+    },
+    "job_parameters": {
+      "propertyOrder": 35,
+      "type": "array",
+      "title": "Job parameters",
+      "description": "Optional key-value parameters passed to the Databricks job run (forwarded as run-now `job_parameters`). Values support Keboola {{variables}} and override the job's default parameter values.",
+      "items": {
+        "type": "object",
+        "title": "Parameter",
+        "required": [
+          "key"
+        ],
+        "properties": {
+          "key": {
+            "propertyOrder": 1,
+            "type": "string",
+            "title": "Key"
+          },
+          "value": {
+            "propertyOrder": 2,
+            "type": "string",
+            "title": "Value"
+          }
         }
       }
+    },
+    "wait_for_finish": {
+      "propertyOrder": 36,
+      "title": "Wait for job to finish",
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, the component waits until the triggered job finishes and fails when the job does not end with SUCCESS. If disabled, the component triggers the job and finishes immediately without checking the result.",
+      "format": "checkbox"
     },
     "ssl_verify": {
       "propertyOrder": 40,
